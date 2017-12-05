@@ -21,6 +21,8 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
 
     @Override
     public void put(K k, V v) {
+        map.put(k,v);
+
         return;
     }
 
@@ -36,7 +38,6 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
         if(set.size() > 0) {
             Pair<K,V> high = peek();
             remove(high);
-            map.remove(high.a);
             return high;
         }
         return null;
@@ -50,9 +51,10 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
         return set.get(0);
     }
 
-    public void remove(Pair e) {
+    private void remove(Pair e) {
+        map.remove(e);
         int j = set.indexOf(e);
-        if(j >= 0 && set.size() > 0) {
+        if(j >= 0) {
             swap(j, set.size() - 1);
             set.remove(set.size() - 1);
             if (set.size() != j) {
