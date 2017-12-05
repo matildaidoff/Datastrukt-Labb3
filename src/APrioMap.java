@@ -32,16 +32,8 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
 
     @Override
     public Pair<K, V> poll() {
-        return null;
-    }
-
-    @Override
-    public Pair<K, V> peek() {
-        return null;
-    }
-    public E poll(){
         if(set.size() > 0) {
-            E high = peek();
+            Pair high = peek();
             remove(high);
             return high;
         }
@@ -49,12 +41,14 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
     }
 
     @Override
-    public Iterator<E> iterator() {
-        return set.iterator();
+    public Pair<K, V> peek() {
+        if(set.size() == 0)
+            return null;
+
+        return set.get(0);
     }
 
-    @Override
-    public void remove(E e) {
+    public void remove(Pair e) {
         int j = set.indexOf(e);
         if(j >= 0 && set.size() > 0) {
             swap(j, set.size() - 1);
@@ -64,14 +58,6 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
                 bubbleUp(j);
             }
         }
-    }
-
-    @Override
-    public E peek() {
-        if(set.size() == 0)
-            return null;
-
-        return set.get(0);
     }
 
     private void bubbleUp(int index){
@@ -85,13 +71,13 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
     }
     private void bubbleDown(int index){
         //int index = 0;
-        E element = set.get(index);
+        Pair element = set.get(index);
         int leftChild = index*2 +1;
         int rightChild = index*2 +2;
 
         if(hasChildL(index) && hasChildR(index)) { //finns 2 barn
-            E lChild = set.get(leftChild);
-            E rChild = set.get(rightChild);
+            Pair lChild = set.get(leftChild);
+            Pair rChild = set.get(rightChild);
             if (comp.compare(lChild, rChild ) < 0) { //minsta barnet till vänster
                 if (comp.compare(element, lChild) > 0) { //noden är större än barnet till vänster
                     swap(index, leftChild);
@@ -104,7 +90,7 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
                 }
             }
         }else if(hasChildL(index)){ //finns ett barn och det är på vänster
-            E lChild = set.get(leftChild);
+            Pair lChild = set.get(leftChild);
             if(comp.compare(element, lChild) > 0 ) {
                 swap(index, leftChild);
                 bubbleDown(leftChild);
@@ -126,7 +112,7 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
     }
 
     private void swap(int i1, int i2){
-        E temp = set.get(i2);
+        Pair temp = set.get(i2);
         set.set(i2, set.get(i1));
         set.set(i1, temp);
     }
