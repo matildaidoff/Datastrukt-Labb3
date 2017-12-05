@@ -6,14 +6,17 @@ poll() returnerar och tar bort det nyckel-värdepar som har högst prioritet.
  */
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V> {
+public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V> { //K = Key, V = Value
 
     private HashMap<K,Integer> map;
+    private ArrayList<Pair<K, V>> set;
 
     public APrioMap(){
         map = new HashMap<>();
+        set = new ArrayList<>();
     }
 
     @Override
