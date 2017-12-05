@@ -6,8 +6,6 @@ poll() returnerar och tar bort det nyckel-värdepar som har högst prioritet.
  */
 
 
-import javafx.util.Pair;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,14 +26,17 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
 
     @Override
     public V get(K k) {
-        return null;
+        if(!map.containsKey(k))
+            return null;
+        return map.get(k);
     }
 
     @Override
-    public Pair poll() {
+    public Pair<K,V> poll() {
         if(set.size() > 0) {
-            Pair high = peek();
+            Pair<K,V> high = peek();
             remove(high);
+            map.remove(high.a);
             return high;
         }
         return null;
@@ -64,7 +65,7 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
     private void bubbleUp(int index){
         //int index = set.size()-1;
         int parentIndex = (index-1)/2;
-        while (hasParent(index) && set.get(index).getValue().compareTo(set.get(parentIndex).getValue() ) <0){
+        while (hasParent(index) && set.get(index).b.compareTo(set.get(parentIndex).b ) <0){
             swap(parentIndex, index);
             index = parentIndex;
             parentIndex = (index-1)/2;
@@ -77,22 +78,22 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
         int rightChild = index*2 +2;
 
         if(hasChildL(index) && hasChildR(index)) { //finns 2 barn
-            Pair<K,V> lChild = set.get(leftChild);
-            Pair<K,V> rChild = set.get(rightChild);
-            if (lChild.getValue().compareTo(rChild.getValue())<0) { //minsta barnet till vänster
-                if (element.getValue().compareTo(lChild.getValue()) > 0) { //noden är större än barnet till vänster
+            V lChild = set.get(leftChild).b;
+            V rChild = set.get(rightChild).b;
+            if (lChild.compareTo(rChild) < 0) { //minsta barnet till vänster
+                if (element.b.compareTo(lChild) > 0) { //noden är större än barnet till vänster
                     swap(index, leftChild);
                     bubbleDown(leftChild);
                 }
             }else{
-                if(element.getValue().compareTo(rChild.getValue()) > 0) { //noden är större än barnet till höger
+                if(element.b.compareTo(rChild) > 0) { //noden är större än barnet till höger
                     swap(index, rightChild);
                     bubbleDown(rightChild);
                 }
             }
         }else if(hasChildL(index)){ //finns ett barn och det är på vänster
-            Pair<K,V> lChild = set.get(leftChild);
-            if(element.getValue().compareTo(lChild.getValue()) > 0 ) {
+            V lChild = set.get(leftChild).b;
+            if(element.b.compareTo(lChild) > 0 ) {
                 swap(index, leftChild);
                 bubbleDown(leftChild);
             }
