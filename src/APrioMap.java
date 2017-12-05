@@ -6,7 +6,8 @@ poll() returnerar och tar bort det nyckel-värdepar som har högst prioritet.
  */
 
 
-import javafx.util.Pair;
+
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,18 +24,30 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
 
     @Override
     public void put(K k, V v) {
-        return;
+        if (!map.containsKey(k)){
+            set.add(new Pair(k,v));
+            bubbleUp(set.size()-1);
+        } else {
+            int index = set.indexOf(new Pair(k,map.get(k)));
+            set.set(set.indexOf(new Pair(k,map.get(k))), new Pair(k,v));
+            bubbleUp(index);
+        }
+        map.put(k,v);
+
     }
 
     @Override
     public V get(K k) {
-        return null;
+        if (!map.containsKey(k)){
+            return null;
+        }
+        return map.get(k);
     }
 
     @Override
-    public Pair poll() {
+    public Pair<K,V> poll() {
         if(set.size() > 0) {
-            Pair high = peek();
+            Pair<K,V> high = peek();
             remove(high);
             return high;
         }
@@ -49,7 +62,8 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
         return set.get(0);
     }
 
-    public void remove(Pair e) {
+    private void remove(Pair e) {
+        map.remove(e);
         int j = set.indexOf(e);
         if(j >= 0 && set.size() > 0) {
             swap(j, set.size() - 1);
@@ -64,7 +78,7 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
     private void bubbleUp(int index){
         //int index = set.size()-1;
         int parentIndex = (index-1)/2;
-        while (hasParent(index) && set.get(index).getValue().compareTo(set.get(parentIndex).getValue() ) <0){
+        while (hasParent(index) && set.get(index).b.compareTo(set.get(parentIndex).b ) <0){
             swap(parentIndex, index);
             index = parentIndex;
             parentIndex = (index-1)/2;
@@ -79,20 +93,20 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
         if(hasChildL(index) && hasChildR(index)) { //finns 2 barn
             Pair<K,V> lChild = set.get(leftChild);
             Pair<K,V> rChild = set.get(rightChild);
-            if (lChild.getValue().compareTo(rChild.getValue())<0) { //minsta barnet till vänster
-                if (element.getValue().compareTo(lChild.getValue()) > 0) { //noden är större än barnet till vänster
+            if (lChild.b.compareTo(rChild.b)<0) { //minsta barnet till vänster
+                if (element.b.compareTo(lChild.b) > 0) { //noden är större än barnet till vänster
                     swap(index, leftChild);
                     bubbleDown(leftChild);
                 }
             }else{
-                if(element.getValue().compareTo(rChild.getValue()) > 0) { //noden är större än barnet till höger
+                if(element.b.compareTo(rChild.b) > 0) { //noden är större än barnet till höger
                     swap(index, rightChild);
                     bubbleDown(rightChild);
                 }
             }
         }else if(hasChildL(index)){ //finns ett barn och det är på vänster
             Pair<K,V> lChild = set.get(leftChild);
-            if(element.getValue().compareTo(lChild.getValue()) > 0 ) {
+            if(element.b.compareTo(lChild.b) > 0 ) {
                 swap(index, leftChild);
                 bubbleDown(leftChild);
             }
