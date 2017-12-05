@@ -71,7 +71,7 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
             if (set.size() != j) {
                 bubbleDown(j);
                 bubbleUp(j);
-            }
+            }//hej
         }
     }
 
