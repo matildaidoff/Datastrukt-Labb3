@@ -8,7 +8,7 @@ poll() returnerar och tar bort det nyckel-värdepar som har högst prioritet.
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+
 
 public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V> { //K = Key, V = Value
 
@@ -22,18 +22,26 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
 
     @Override
     public void put(K k, V v) {
+        if(map.containsKey(k)){
+
+        }else{
+
+        }
+
 
     }
 
     @Override
     public V get(K k) {
-        return null;
+        if(!map.containsKey(k))
+            return null;
+        return map.get(k);
     }
 
     @Override
     public Pair<K, V> poll() {
         if(set.size() > 0) {
-            Pair high = peek();
+            Pair<K,V> high = peek();
             remove(high);
             return high;
         }
@@ -76,8 +84,8 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
         int rightChild = index*2 +2;
 
         if(hasChildL(index) && hasChildR(index)) { //finns 2 barn
-            Pair lChild = set.get(leftChild);
-            Pair rChild = set.get(rightChild);
+            Pair<K,V> lChild = set.get(leftChild);
+            Pair<K,V> rChild = set.get(rightChild);
             if (comp.compare(lChild, rChild ) < 0) { //minsta barnet till vänster
                 if (comp.compare(element, lChild) > 0) { //noden är större än barnet till vänster
                     swap(index, leftChild);
@@ -112,7 +120,7 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
     }
 
     private void swap(int i1, int i2){
-        Pair temp = set.get(i2);
+        Pair<K,V> temp = set.get(i2);
         set.set(i2, set.get(i1));
         set.set(i1, temp);
     }
