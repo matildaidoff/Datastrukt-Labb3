@@ -1,0 +1,59 @@
+Ni ska analysera tidskomplexiteten för era
+implementationer av put, get, peek och poll och lägga dessa analyser i en textfil kallad komplexitet.txt.
+
+
+public void put(K k, V v) {
+        if (!map.containsKey(k)){                                               O(1)
+            set.add(new Pair<K,V>(k,v));                                        O(1)
+            bubbleUp(set.size()-1);                                             O(log(n))
+        } else {
+            int index = set.indexOf(new Pair<K,V>(k,map.get(k)));               O(1)
+            set.set(set.indexOf(new Pair<K, V>(k,map.get(k))), new Pair<K,V>(k,v)); O(1)
+            bubbleUp(index);                                                    O(log(n))
+            bubbleDown(index);                                                  O(log(n)) but only one of the bubble-functions will run
+        }
+        map.put(k,v);                                                           O(1)
+
+Time complexity for put(K k, V v) is O(log(n))
+
+
+public V get(K k) {
+        if (!map.containsKey(k)){                                               O(1)
+            return null;                                                        O(1)
+        }
+        return map.get(k);                                                      O(1)
+    }
+
+Time complexity for get(K k) is O(1)
+
+    public Pair<K,V> poll() {
+        if(set.size() > 0) {                                                    O(1)
+            Pair<K,V> high = peek();                                            O(1)
+            remove(high);                                                       From time complexity analysis for remove(Pair e) comes O(log(n))
+            return high;                                                        O(1)
+        }
+        return null;                                                            O(1)
+    }
+
+private void remove(Pair<K,V> e) {
+        map.remove(e.a);                                                        O(1)
+        int j = set.indexOf(e);                                                 O(1)
+        if(j >= 0 && set.size() > 0) {                                          O(1)
+            swap(j, set.size() - 1);                                            O(1)
+            set.remove(set.size() - 1);                                         O(1)
+            if (set.size() != j) {
+                bubbleDown(j);                                                  O(log(n))
+            }
+        }
+    }
+
+Time complexity for remove(...) is O(log(n)) therefore is complexity for poll() also O(log(n))
+
+    public Pair<K,V> peek() {
+        if(set.size() == 0)                                                     O(1)
+            return null;                                                        O(1)
+
+        return set.get(0);                                                      O(1)
+    }
+
+Time complexity for peek() is O(1)
