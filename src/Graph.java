@@ -1,7 +1,17 @@
-/*import java.util.List;
+import javafx.util.Pair;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Graph {
-    public Graph() { ... }
+
+    private HashMap<String, LinkedList<Pair<String, Integer>>> nodes; //nod etiketter och vikter
+
+    public Graph() {
+        nodes = new HashMap<>();
+    }
 
     public void addVertice(String label) { ... }
 
@@ -21,5 +31,11 @@ public class Graph {
         }
     }
 
-    public Path shortestPath(String start, String dest) { ... }
-}*/
+    public Path shortestPath(String start, String dest) {
+        HashMap<String, Integer> d = new HashMap<>();
+        HashMap<String, Integer> p = new HashMap<>();
+        HashSet<Pair<String, Integer>> k = new HashSet();
+        PrioMap<String, Integer> q = new APrioMap<>();
+
+    }
+}
