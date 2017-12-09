@@ -36,33 +36,39 @@ public class Graph {
 
     public Path shortestPath(String start, String dest) {
         HashMap<String, Integer> d = new HashMap<>();
-        HashMap<String, Integer> p = new HashMap<>();
+        HashMap<String, String> p = new HashMap<>();
+
         HashSet<Pair<String, Integer>> k = new HashSet();
+
         PrioMap<String, Integer> q = new APrioMap<>();
 
-        for (String s : nodes.keySet())
+        for (String s : nodes.keySet()) {
             d.put(s, Integer.MAX_VALUE);
+        }
 
         d.put(start, 0);
-        p.put(start, 0);
+        q.put(start, 0);
+
         while (q.peek() != null) {
             Pair<String, Integer> v = q.poll();
             if (!k.contains(v)) {
                 k.add(v);
+
                 for (Pair<String, Integer> successor : nodes.get(v.a)) {
                     int oldPathLenght = d.get(successor.a);
-                    int newPathLenght = d.get(v.a) + successor.b;
-                    if (!k.contains(v) && oldPathLenght > newPathLenght) {
-                        d.replace(successor.a, newPathLenght);
-                        p.put(successor.a, v.b);
+                    int newPathLength = d.get(v.a) + successor.b;
+
+                    if (!k.contains(successor) && oldPathLenght > newPathLength) {
+                        d.replace(successor.a, newPathLength);
+                        p.put(successor.a, v.a);
                         q.put(successor.a, d.get(successor.a));
                     }
                 }
             }
 
         }
-        if (d.get(dest) == Integer.MAX_VALUE)
-            return null;
+        if (d.get(dest) == Integer.MAX_VALUE) return null;
+
         LinkedList<String> pathList = new LinkedList<>();
         pathList.add(dest);
         while (!pathList.get(0).equals(start)){
