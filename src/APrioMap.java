@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V> { //K = Key, V = Value
 
-    private HashMap<K,V> map;
+    private HashMap<K,Integer> map;
     private ArrayList<Pair<K, V>> set;
 
     public APrioMap(){
@@ -23,14 +23,14 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
     public void put(K k, V v) {
         if (!map.containsKey(k)){
             set.add(new Pair<K,V>(k,v));
+            map.put(k,set.size()-1);
             bubbleUp(set.size()-1);
+
         } else {
-            int index = set.indexOf(new Pair<K,V>(k,map.get(k)));
-            set.set(set.indexOf(new Pair<K, V>(k,map.get(k))), new Pair<K,V>(k,v));
-            bubbleUp(index);
-            bubbleDown(index);
+            set.get(map.get(k)).b = v;
+            bubbleDown(map.get(k));
+            bubbleUp(map.get(k));
         }
-        map.put(k,v);
 
     }
 
@@ -39,7 +39,7 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
         if (!map.containsKey(k)){
             return null;
         }
-        return map.get(k);
+        return set.get(map.get(k)).b;
     }
 
     @Override
@@ -62,11 +62,12 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
 
     private void remove(Pair<K,V> e) {
         map.remove(e.a);
-        int j = set.indexOf(e);
+        int j = map.get(e.a);
         if(j >= 0 && set.size() > 0) {
             swap(j, set.size() - 1);
             set.remove(set.size() - 1);
-            if (set.size() != j) {
+            if (!set.isEmpty()) {
+                map.replace(set.get(0).a, 0);
                 bubbleDown(j);
             }
         }
@@ -127,6 +128,9 @@ public class APrioMap<K, V extends Comparable<? super V>> implements PrioMap<K,V
         Pair<K,V> temp = set.get(i2);
         set.set(i2, set.get(i1));
         set.set(i1, temp);
+
+        map.replace(set.get(i1).a, i1);
+        map.replace(set.get(i2).a, i2);
     }
 
     @Override
